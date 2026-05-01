@@ -1,0 +1,26 @@
+{
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "name": "simmr",
+  "version": "1.0.0",
+  "description": "Work in progress",
+  "main": "index.js",
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --prefix client\" \"node server/index.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kn5225/Simmr.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kn5225/Simmr/issues"
+  },
+  "homepage": "https://github.com/kn5225/Simmr#readme"
+}
