@@ -6,6 +6,7 @@ function App(){
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false)
   function handleSearch(){
+    if (query.trim.length===0){return}
     setLoading(true)
     fetch(`/api/recipes?query=${query}`)
     .then(rec => rec.json())

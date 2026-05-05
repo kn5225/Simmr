@@ -20,7 +20,16 @@ app.get('/api/recipes', async (req, res) => {
     }
 
     })
-
+app.get('/api/recipe/:id', async (req, res) => {
+    try{
+    const response = await axios.get(`https://api.spoonacular.com/recipes/${req.params.id}/information`, 
+        {params: {apiKey: process.env.SPOONACULAR_API_KEY}})
+    res.json({message: response.data.extendedIngredients})
+    }
+    catch(error) {
+        console.log(error.message)
+        res.status(500).send('API call failed')
+    }})
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
     })
