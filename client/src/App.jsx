@@ -4,12 +4,14 @@ function App(){
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false)
   function handleSearch(){
     setLoading(true)
     fetch(`/api/recipes?query=${query}`)
     .then(rec => rec.json())
     .then(rec => setRecipes(rec.message.results))
     .then(() => setLoading(false))
+    .then(() => setSearched(true))
   }
   return(
   <div> 
@@ -22,6 +24,7 @@ function App(){
           <img src = {e.image} alt = {e.title}/>
         </div>
       ))}
+    {searched && !loading && (recipes.length === 0) && <p>no items found</p>}
   </div>
       )}
 
