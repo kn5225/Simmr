@@ -6,6 +6,7 @@ function App(){
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [cart,setCart] = useState([]);
+  const [addedRecipes,setAddedRecipes] = useState([]);
   function handleSearch(){
     if (query.trim().length===0){return}
     setLoading(true)
@@ -19,6 +20,7 @@ function App(){
     fetch(`/api/recipe/${recipeId}`)
     .then(rec => rec.json())
     .then(rec => setCart([...cart,...rec.message]))
+    setAddedRecipes([...addedRecipes, recipeId])
   }
   return(
   <div> 
@@ -29,7 +31,8 @@ function App(){
         <div key = {e.id}>
           <h3>{e.title}</h3> 
           <img src = {e.image} alt = {e.title}/>
-          <button onClick={() => handleAddToCart(e.id)}>Add to Cart</button>
+          <button onClick={() => handleAddToCart(e.id)} disabled = 
+          {addedRecipes.includes(e.id)}>Add to Cart</button>
         </div>
       ))}
     {cart.map(ingredient => (
