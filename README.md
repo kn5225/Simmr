@@ -83,8 +83,8 @@ Simmr/
 <details>
 <summary>About this project</summary>
 
-Every line of code in this project was written by hand without AI code generation. I used AI as a learning tool — to understand concepts, get pointed toward the right resources, and have my code reviewed for bugs — but never to generate the code itself.
+Every line of code in this project was written by hand without AI code generation. I used AI as a learning tool to understand concepts, get pointed toward the right resources, and have my code reviewed for bugs, but never to generate the code itself.
 
-I'm a CS freshman building this to genuinely understand full-stack development rather than just ship something that works without knowing why. It took longer. That was the point.
+I'm a CE freshman building this to genuinely understand full-stack development rather than just ship something that works without knowing why. It took longer. That was the point.
 
 </details>
