@@ -19,8 +19,15 @@ function App(){
   function handleAddToCart(recipeId){
     fetch(`/api/recipe/${recipeId}`)
     .then(rec => rec.json())
-    .then(rec => setCart([...cart,...rec.message]))
+    .then(rec => setCart([...cart,...rec.message.map(e => ({...e, recipeId: recipeId}))]))
     setAddedRecipes([...addedRecipes, recipeId])
+  }
+  function handleRemoveFromCart(recipeId){
+    setCart(cart.filter(ingredient => ingredient.recipeId!=recipeId))
+    setAddedRecipes(addedRecipes.filter(recipe => recipe!=recipeId))
+
+
+
   }
   return(
   <div> 
@@ -33,6 +40,9 @@ function App(){
           <img src = {e.image} alt = {e.title}/>
           <button onClick={() => handleAddToCart(e.id)} disabled = 
           {addedRecipes.includes(e.id)}>Add to Cart</button>
+          <button onClick={() => handleRemoveFromCart(e.id)} disabled = 
+          {!addedRecipes.includes(e.id)}>Remove from Cart</button>
+
         </div>
       ))}
     {cart.map(ingredient => (
