@@ -26,6 +26,23 @@ function App(){
     setCart(cart.filter(ingredient => ingredient.recipeId!=recipeId))
     setAddedRecipes(addedRecipes.filter(recipe => recipe!=recipeId))
 
+  }
+
+  async function handleCheckout(){
+    const url = `/api/checkout`
+    const data = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({cart: cart})
+    })
+
+    const result = await data.json();
+    console.log('Success!!')
+    window.location.href = result.url
+
+
 
 
   }
@@ -49,7 +66,9 @@ function App(){
           <p key={ingredient.id}>{ingredient.original}</p> 
     ))}
     {searched && !loading && (recipes.length === 0) && <p>no items found</p>}
+    {cart.length>0 && <button onClick= {handleCheckout} >Checkout</button>}
   </div>
+
       )}
 
 export default App
