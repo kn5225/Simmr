@@ -6,6 +6,10 @@ function Home(){
   const [searched, setSearched] = useState(false);
   const [cart,setCart] = useState([]);
   const [addedRecipes,setAddedRecipes] = useState([]);
+  const [isCooking, setIsCooking] = useState(false);
+  const [instructions, setInstructions] = useState([]);
+  const [stepNumber, setStepNumber] = useState(0);
+
   function handleSearch(){
     if (query.trim().length===0){return}
     setLoading(true)
@@ -21,10 +25,17 @@ function Home(){
     .then(rec => setCart([...cart,...rec.message.map(e => ({...e, recipeId: recipeId}))]))
     setAddedRecipes([...addedRecipes, recipeId])
   }
+
   function handleRemoveFromCart(recipeId){
     setCart(cart.filter(ingredient => ingredient.recipeId!=recipeId))
     setAddedRecipes(addedRecipes.filter(recipe => recipe!=recipeId))
-
+  }
+  function handleStartCooking(recipeId) {
+    fetch(`/api/recipe/${recipeId}/instructions`)
+    .then(rec => rec.json())
+    .then(rec => setInstructions(rec.message))
+    .then(() => setIsCooking(true))
+    .then(() => setStepNumber(0))
   }
 
   async function handleCheckout(){
@@ -45,7 +56,8 @@ function Home(){
 
 
 return(
-<div> 
+    <div>
+    {!isCooking && (<div> 
     <input value={query} onChange={(e) => {setQuery(e.target.value)}}/>
     <button onClick={handleSearch}>Submit</button>
     {loading && <p>Loading...</p>}
@@ -57,6 +69,7 @@ return(
           {addedRecipes.includes(e.id)}>Add to Cart</button>
           <button onClick={() => handleRemoveFromCart(e.id)} disabled = 
           {!addedRecipes.includes(e.id)}>Remove from Cart</button>
+          <button onClick={() => handleStartCooking(e.id)}>Start cooking</button>
 
         </div>
       ))}
@@ -66,5 +79,21 @@ return(
     {searched && !loading && (recipes.length === 0) && <p>no items found</p>}
     {cart.length>0 && <button onClick= {handleCheckout} >Checkout</button>}
   </div>)}
+  {isCooking && (
+    <div>
+        <p>
+            {instructions[0]?steps[stepNumber?.step]}
+        </p>
+
+
+
+
+
+    </div>
+
+
+   ) }
+</div>)
+
 
   export default Home
