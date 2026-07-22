@@ -1,4 +1,5 @@
 import { useState} from 'react'
+import { useNavigate } from 'react-router-dom'
 function Home(){
   const [query, setQuery] = useState('');
   const [recipes, setRecipes] = useState([]);
@@ -6,10 +7,8 @@ function Home(){
   const [searched, setSearched] = useState(false);
   const [cart,setCart] = useState([]);
   const [addedRecipes,setAddedRecipes] = useState([]);
-  const [isCooking, setIsCooking] = useState(false);
-  const [instructions, setInstructions] = useState([]);
-  const [stepNumber, setStepNumber] = useState(0);
-
+  const navigate = useNavigate()
+  
   function handleSearch(){
     if (query.trim().length===0){return}
     setLoading(true)
@@ -30,13 +29,6 @@ function Home(){
     setCart(cart.filter(ingredient => ingredient.recipeId!=recipeId))
     setAddedRecipes(addedRecipes.filter(recipe => recipe!=recipeId))
   }
-  function handleStartCooking(recipeId) {
-    fetch(`/api/recipe/${recipeId}/instructions`)
-    .then(rec => rec.json())
-    .then(rec => setInstructions(rec.message))
-    .then(() => setIsCooking(true))
-    .then(() => setStepNumber(0))
-  }
 
   async function handleCheckout(){
     const url = `/api/checkout`
@@ -52,16 +44,12 @@ function Home(){
     console.log('Success!!')
     window.location.href = result.url}
 
-
-
-
 return(
-    <div>
-    {!isCooking && (<div> 
-    <input value={query} onChange={(e) => {setQuery(e.target.value)}}/>
-    <button onClick={handleSearch}>Submit</button>
-    {loading && <p>Loading...</p>}
-    {recipes.map(e => (
+    <div> 
+      <input value={query} onChange={(e) => {setQuery(e.target.value)}}/>
+      <button onClick={handleSearch}>Submit</button>
+      {loading && <p>Loading...</p>}
+      {recipes.map(e => (
         <div key = {e.id}>
           <h3>{e.title}</h3> 
           <img src = {e.image} alt = {e.title}/>
@@ -69,31 +57,14 @@ return(
           {addedRecipes.includes(e.id)}>Add to Cart</button>
           <button onClick={() => handleRemoveFromCart(e.id)} disabled = 
           {!addedRecipes.includes(e.id)}>Remove from Cart</button>
-          <button onClick={() => handleStartCooking(e.id)}>Start cooking</button>
-
+          <button onClick={() => {navigate(`/cook/${e.id}`)}}>Start cooking</button>
         </div>
       ))}
-    {cart.map(ingredient => (
-          <p key={ingredient.id}>{ingredient.original}</p> 
-    ))}
-    {searched && !loading && (recipes.length === 0) && <p>no items found</p>}
-    {cart.length>0 && <button onClick= {handleCheckout} >Checkout</button>}
-  </div>)}
-  {isCooking && (
-    <div>
-        <p> Step {stepNumber+1} of {instructions[0]?.steps.length}</p>
-        <p>
-            {instructions[0]?.steps[stepNumber]?.step}
-        </p>
-        <button onClick={() => setStepNumber(stepNumber+1)} disabled = {stepNumber === instructions[0]?.steps.length - 1}>Next</button>
-        <button onClick={() => setStepNumber(stepNumber-1)} disabled = {stepNumber === 0}>Previous</button>
-        <button onClick={() => setIsCooking(false)}>Stop cooking</button>
-
-    </div>)
-
-
-  } 
-</div>)}
-
+      {cart.map(ingredient => (
+        <p key={ingredient.id}>{ingredient.original}</p> 
+      ))}
+      {searched && !loading && (recipes.length === 0) && <p>no items found</p>}
+      {cart.length>0 && <button onClick= {handleCheckout} >Checkout</button>}
+    </div>)}
 
   export default Home
